@@ -1,43 +1,66 @@
-// Selectors
-const input = document.getElementById('todo-input');
-const addBtn = document.getElementById('add-btn');
-const todoList = document.getElementById('todo-list');
+const input = document.querySelector('#todo-input');
+const addBtn = document.querySelector('#add-btn');
+const todoList = document.querySelector('#todo-list');
+const darkToggle = document.querySelector('#dark-toggle');
 
-// Load existing todos from localStorage
 window.onload = () => {
   const savedTodos = JSON.parse(localStorage.getItem('todos')) || [];
   savedTodos.forEach(todo => addTodo(todo.text, todo.completed));
+
+  const theme = localStorage.getItem('theme');
+  if (theme === 'dark') {
+    document.body.classList.add('dark-mode');
+  }
 };
 
-// Add button click
+// Add new todo
 addBtn.addEventListener('click', () => {
   const text = input.value.trim();
-  if (text !== "") {
+  if (text !== '') {
     addTodo(text);
-    input.value = "";
+    input.value = '';
   }
 });
-// Function to create and add todo
+
+// Add todo to DOM
 function addTodo(text, completed = false) {
   const li = document.createElement('li');
-  li.textContent = text;
+
+  const span = document.createElement('span');
+  span.textContent = text;
+  li.appendChild(span);
+
   if (completed) li.classList.add('completed');
 
   // Toggle complete
-  li.addEventListener('click', () => {
+  span.addEventListener('click', () => {
     li.classList.toggle('completed');
     saveTodos();
+  });
+
+  // Edit button
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+  editBtn.classList.add('edit-btn');
+  editBtn.addEventListener('click', () => {
+    const newText = prompt('Edit your todo:', span.textContent);
+    if (newText !== null && newText.trim() !== '') {
+      span.textContent = newText.trim();
+      saveTodos();
+    }
   });
 
   // Delete button
   const delBtn = document.createElement('button');
   delBtn.textContent = 'Delete';
+  delBtn.classList.add('delete-btn');
   delBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     li.remove();
     saveTodos();
   });
 
+  li.appendChild(editBtn);
   li.appendChild(delBtn);
   todoList.appendChild(li);
   saveTodos();
@@ -48,9 +71,16 @@ function saveTodos() {
   const todos = [];
   document.querySelectorAll('#todo-list li').forEach(li => {
     todos.push({
-      text: li.firstChild.textContent,
+      text: li.querySelector('span').textContent,
       completed: li.classList.contains('completed')
     });
   });
   localStorage.setItem('todos', JSON.stringify(todos));
 }
+
+// Dark mode toggle
+darkToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
