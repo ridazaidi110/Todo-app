@@ -109,3 +109,53 @@ ul li {
   background-color: #dc3545;
   color: #fff;
 }
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    text-align: center;
+  }
+
+  .input-box {
+    flex-direction: column;
+  }
+
+  .input-box input[type="text"],
+  button[type="button"] {
+    width: 100%;
+    margin: 5px 0;
+    font-size: 18px;
+  }
+
+  ul li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    margin: 5px 5px 0 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  button,
+  input {
+    font-size: 16px;
+  }
+
+  #dark-toggle {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
